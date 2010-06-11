@@ -1,2 +1,2 @@
-dodgson: dodgson.o
-	g++ -O2 dodgson.cpp-o dodgson
+dodgson: dodgson.o functions.o
+	g++ -O2 -o dodgson dodgson.o functions.o

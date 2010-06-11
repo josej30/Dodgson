@@ -1,4 +1,11 @@
-#include "dodgson.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <stdlib.h>
+
+#include "functions.h"
 
 using namespace std;
 
