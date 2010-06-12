@@ -5,6 +5,7 @@
 #include <vector>
 #include <stdlib.h>
 #include "functions.h"
+#include "pref.h"
 using namespace std;
 
 
@@ -59,12 +60,19 @@ int main () {
   }
   cout << "" << endl;
 
-  int c = bitsCand(candidatos);
-  cout << "necesarios: " << c << endl;
+  int bit = 10;
+  cout << bit << endl;
+  bit = bit << 9;
+  cout << bit << endl;
+  bit = bit | 11;
+  cout << bit << endl;
+  bit = bit << 9;
+  cout << bit << endl;
+  bit = bit | 100;
+  cout << bit << endl;
 
-  int r = buscaCand("surafrica",cand);
-  cout << r << endl;
-
+  Pref pepe = Pref(candidatos);
+    
   /********** 
   ***********  Fin de Comprobacion 
   ***********/
