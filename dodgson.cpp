@@ -10,10 +10,17 @@
 using namespace std;
 
 
-int main () {
+int main (int argc, char *argv[]) {
+
+  if (argc < 3){
+    printf("USO: ./dodgson {-ida|-bfs} [-all] [-final <archivo_salida>] <archivo_entrada>\n");
+    exit(-1);
+  }
+
+  string archivoin = argv[argc-1];
   int cont = 1; // Contador de las lineas del archivo
   string line; // String que contiene la linea leida
-  ifstream entrada("entrada2.txt"); // Stream contenedor del archivo de entrada
+  ifstream entrada(archivoin.c_str()); // Stream contenedor del archivo de entrada
   int candidatos; // Cantidad de candidatos
   int offset = 0;
   int cand_por_int = 0; // Candidatos que se guardan en un entero
@@ -48,7 +55,7 @@ int main () {
   vector< vector<int> > perfil; // Matriz que representa el perfil inicial
 
   cont = 1;
-  ifstream entrada2("entrada2.txt"); // Stream contenedor del archivo de entrada
+  ifstream entrada2(archivoin.c_str()); // Stream contenedor del archivo de entrada
   if (entrada2.is_open()) {
     while (! entrada2.eof() ) {
       getline (entrada2,line);
@@ -88,27 +95,19 @@ int main () {
   ********** Comprobacion de que se guardan bien las cosas 
   **********/
 
+  /*
+
   cout << "Candidatos: " << candidatos << endl;
 
   cout << "Los candidatos son: ";
   for (int i=0;i<candidatos;i++){
-    cout << c[i] << " ";
   }
-  cout << "" << endl;
 
-  cout << endl << "Pruebas misticas de almacenamiento" << endl;
-  int bit = 10;
-  cout << bit << endl;
-  bit = bit << 9;
-  cout << bit << endl;
-  bit = bit | 11;
-  cout << bit << endl;
-  bit = bit << 9;
-  cout << bit << endl;
-  bit = bit | 100;
-  cout << bit << endl;
-  
+  */
+
   vector< vector<int> > zzz = perfil;
+
+  /* Este código imprime toda la matriz de preferencias (perfil) */
 
   cout << endl << "Matriz de preferencias: " << endl;
   vector<int>::iterator it;
@@ -123,7 +122,7 @@ int main () {
 
   int con = condorcet(zzz,c);
   if (con>=0)
-    cout << endl << c[con] << " es un Condorcet Winner!" << endl;
+    cout << c[con] << " es un Condorcet Winner!" << endl;
 
   /********** 
   ***********  Fin de Comprobacion 

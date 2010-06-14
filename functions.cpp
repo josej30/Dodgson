@@ -72,6 +72,7 @@ int condorIndiv(int x,vector< vector<int> > p,vector<string> c){
 
 }
 
+
 /* Funcion que dado un perfil, revisa si tiene Condorcet
    Winner. Retorna el ganador. Si no hay retorna -1.
 */
