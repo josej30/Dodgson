@@ -1,22 +1,8 @@
 #include <iostream>
 #include <vector>
-#include<math.h> 
-
-typedef std::vector<int> Pref;
-typedef std::vector<Pref> MatPref;
+#include "nodo.h"
 
 using namespace std;
-
-class Nodo {
-
-public:
-
-  MatPref perfil; /* Matriz que representa las preferencias */
-  
-  /* Metodos de la clase Nodo */
-  void insertar(vector<int>); /* Inserta una preferencia a la matriz */ 
-  void mostrar(); /* Muestra un preferencia*/
-};
 
 void Nodo::insertar(vector<int> c) {
   perfil.push_back(c);
@@ -33,6 +19,8 @@ void Nodo::mostrar(){
      cout << endl;
    }
   cout<< endl;
+}
+  
 }
 
 /* Funcion para verificar que dos nodos sean iguales, 
@@ -115,6 +103,7 @@ int repetidos(Nodo x, Nodo y){
     
   }
 }
+<<<<<<< HEAD:nodo.cpp
 
 int main () {
   Nodo nodo;
@@ -143,3 +132,4 @@ int main () {
   nodo1.mostrar();
   return 0;
 }
+

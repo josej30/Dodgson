@@ -4,11 +4,29 @@
 #include <sstream>
 #include <vector>
 #include <stdlib.h>
-#include <math.h>
+#include <cmath>
 #include "functions.h"
+#include "nodo.h"
 
 using namespace std;
 
+int BFS(vector<int> cols, vector<Nodo> &m, int limite){
+
+  /*  vector<int>::iterator it;
+  int tam = m.size();
+  for (int i=0; i<tam ; i++) {
+    vector<int> z = m.back();
+    m.pop_back();
+    // Busco las columnas que no haya expandido previamente
+    if (existe(cols,i)==0){
+      //      for ( it=z.begin() ; it < z.end(); it++ )
+      cout << i << endl;
+    }
+
+    }*/
+  return 0;
+  
+}
 
 int main (int argc, char *argv[]) {
 
@@ -26,6 +44,7 @@ int main (int argc, char *argv[]) {
   int cand_por_int = 0; // Candidatos que se guardan en un entero
   int tpref = 0; // Tamano en bytes de las preferencias
   vector<string> c; // Vector que contiene a los candidatos y funciona como una tabla de hash
+  vector< vector<int> > fifo;
 
   if (entrada.is_open()) {
     while (! entrada.eof() ) {
@@ -107,9 +126,9 @@ vot--;
 
   vector< vector<int> > zzz = perfil;
 
-  /* Este c�digo imprime toda la matriz de preferencias (perfil) */
+  /* Este codigo imprime toda la matriz de preferencias (perfil) */
 
-  cout << endl << "Matriz de preferencias: " << endl;
+  /*cout << endl << "Matriz de preferencias: " << endl;
   vector<int>::iterator it;
   int tam = perfil.size();
   for (unsigned i=0; i<tam ; i++) {
@@ -118,11 +137,25 @@ vot--;
     for ( it=z.begin() ; it < z.end(); it++ )
       cout << " " << c[*it];
     cout << endl;
-  }
+  }*/
 
-  int con = condorcet(zzz,c);
+
+  /* int con = condorcet(zzz,c);
   if (con>=0)
     cout << c[con] << " es un Condorcet Winner!" << endl;
+  */
+  
+  vector<int> a;
+  a.push_back(8);
+
+  vector<Nodo> nodeishon;
+
+  int asd = BFS(a,nodeishon,0);
+
+  /*  vector<int>::iterator it;
+  for ( it=b.begin() ; it < b.end(); it++ )
+    cout << " " << *it;
+    cout << endl;*/
 
   /**********
   *********** Fin de Comprobacion
