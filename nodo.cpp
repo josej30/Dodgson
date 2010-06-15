@@ -21,7 +21,7 @@ void Nodo::mostrar(){
   cout<< endl;
 }
   
-}
+
 
 /* Funcion para verificar que dos nodos sean iguales, 
    retorna 1 sino lo son, 0 en caso contrario */
@@ -66,44 +66,46 @@ void Nodo::mostrar(){
 
 
 int repetidos(Nodo x, Nodo y){
-  MatPref perfil_aux1 = x.perfil;
-  MatPref perfil_aux2 = y.perfil;
-  //bool igual = true;
-  if (x.perfil.size() != y.perfil.size()){
+  
+  MatPref n1 = x.perfil;
+  MatPref n2 = y.perfil;
+  int j;
+
+  // Veo si el tamano de ambos nodos es igual
+  if (n1.size() != n2.size())
     return 0;
-  }
-  else {
-    int tam = x.perfil.size();
-    for (unsigned k = 0; k < tam; k++){
-      vector<int> z = x.perfil.at(k);
-      for (unsigned i = 0; i < tam ; i++) {    
-	vector<int> w = y.perfil.at(i);
-	cout << " i " << i;
-	cout << " k " << k;
-
-	cout << " wp " << w[0];	 
-	cout << " zp " << z[0];
-	if (z[0] == w[0]){
-	  perfil_aux1.erase (perfil_aux1.begin()+k);
-	  perfil_aux2.erase (perfil_aux2.begin()+k);
-	  for ( unsigned j = 1; j < z.size(); j++ ){
-
-
-
-	    if  (z[j] != w[j]) 
+  else{
+    for (unsigned i = x.perfil.size() - 1; i >= 0; i--){
+      vector<int> pref_n1 = n1.at(i);
+      j = 0;
+      while (j < n2.size()){
+	vector<int> pref_n2 = n2.at(j);
+	if (pref_n1[0] != pref_n2[0]) 
+	  j++;
+	else{
+	  for (unsigned k = 1; k < pref_n2.size(); k++ ){
+	    if (pref_n1[k] != pref_n2[k]){
 	      return 0;
+	    }
+	    n1.erase(n1.begin() + i);
+	    n2.erase(n2.begin() + j);
+	    j = y.perfil.size();
 	  }
+
 	}
       }
-    }
-    if (perfil_aux1.size() == 0 and perfil_aux2.size() == 0)
-      return 1;
-    else
-      return 0;
+      if (n1.size() == x.perfil.size()) /*Verifico que al menos haya eliminado un vector */
+	return 0;	                  /*lo cual me permite asegurar que hay un vector en comun entre los nodos*/
     
+    }
+    if (n1.size() == 0 and n2.size() == 0)
+      return 1;
+    return 0;
+
   }
 }
-<<<<<<< HEAD:nodo.cpp
+
+
 
 int main () {
   Nodo nodo;
@@ -119,17 +121,18 @@ int main () {
  
   nodo.insertar(e);
   nodo.insertar(d);
-  //nodo.insertar(f);
-  nodo.insertar(g);
+  nodo.insertar(f);
+  //nodo.insertar(g);
   
   nodo1.insertar(f);
-  //nodo1.insertar(i);
+  ////nodo1.insertar(i);
   nodo1.insertar(d);
   nodo1.insertar(e);
   
-  cout << "Son iguales: " << repetidos(nodo,nodo1) << endl;
+  
   nodo.mostrar();
   nodo1.mostrar();
+  cout << "Son iguales: " << repetidos(nodo,nodo1) << endl;
   return 0;
 }
 
