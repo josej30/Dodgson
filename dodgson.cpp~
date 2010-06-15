@@ -24,33 +24,35 @@ int main (int argc, char *argv[]) {
   int candidatos; // Cantidad de candidatos
   int offset = 0;
   int cand_por_int = 0; // Candidatos que se guardan en un entero
-  int tpref = 0; // Tamano en bytes de las preferencias
+  int tpref = 0; // Tamano en bytes de las preferencias  
   vector<string> c; // Vector que contiene a los candidatos y funciona como una tabla de hash
+  int cant_pref = 3;
 
   if (entrada.is_open()) {
-    while (! entrada.eof() ) {
+    while (! entrada.eof()) {
       getline (entrada,line);
      
-      if (cont == 2){
+      if (cont == 2){     	
 
-string sub;
-stringstream ss(line);
-ss >> sub;
+	string sub;
+	stringstream ss(line);	
+	ss >> sub;
 
-// Se lee el numero de candidatos y se hacen calculos de
-// almacenamiento para guardarlos eficientemente
-candidatos = atoi(sub.c_str());
-offset = bitsCand(candidatos);
-cand_por_int = 32/offset;
-float temp = (float)candidatos/(float)cand_por_int;
-tpref = (int)ceil(temp);
-break;
+	// Se lee el numero de candidatos y se hacen calculos de 
+	// almacenamiento para guardarlos eficientemente
+	candidatos = atoi(sub.c_str());
+	offset = bitsCand(candidatos);
+	cand_por_int = 32/offset;
+	float temp = (float)candidatos/(float)cand_por_int;
+	tpref = (int)ceil(temp);
+	break;
       }
       cont++;
+     
     }
     entrada.close();
   }
-  else cout << "No se pudo abrir el archivo\n";
+  else cout << "No se pudo abrir el archivo\n"; 
 
   vector< vector<int> > perfil; // Matriz que representa el perfil inicial
 
@@ -60,39 +62,39 @@ break;
     while (! entrada2.eof() ) {
       getline (entrada2,line);
       
-      if (cont == 2){
-string sub;
-stringstream ss(line);
-ss >> sub;
+      if (cont == 2){     	
+	string sub;
+	stringstream ss(line);	
+	ss >> sub;
 
-while (ss >> sub){
-c.push_back(sub);
-}
+	while (ss >> sub){
+	  c.push_back(sub);
+	}
       }
       else if (cont > 3){
-string sub;
-stringstream ss(line);
-ss >> sub;
-int vot = atoi(sub.c_str());
+	string sub;
+	stringstream ss(line);	
+	ss >> sub;
+	int vot = atoi(sub.c_str());
 
-vector<int> a;
-while (ss >> sub){
-a.push_back(buscaCand(sub,c));
-}
+	vector<int> a;
+	while (ss >> sub){
+	  a.push_back(buscaCand(sub,c));
+	}
 
-while (vot > 0){
-perfil.push_back(a);
-vot--;
-}
-      }
+	while (vot > 0){
+	  perfil.push_back(a);
+	  vot--;
+	}
+      }    
       cont++;
     }
     entrada2.close();
   }
-  else cout << "No se pudo abrir el archivo\n";
+  else cout << "No se pudo abrir el archivo\n"; 
 
-  /*********
-  ********** Comprobacion de que se guardan bien las cosas
+  /********* 
+  ********** Comprobacion de que se guardan bien las cosas 
   **********/
 
   /*
@@ -107,12 +109,12 @@ vot--;
 
   vector< vector<int> > zzz = perfil;
 
-  /* Este cï¿½digo imprime toda la matriz de preferencias (perfil) */
+  /* Este código imprime toda la matriz de preferencias (perfil) */
 
   cout << endl << "Matriz de preferencias: " << endl;
   vector<int>::iterator it;
   int tam = perfil.size();
-  for (unsigned i=0; i<tam ; i++) {
+  for (unsigned i=0; i<tam ; i++) {    
     vector<int> z = perfil.back();
     perfil.pop_back();
     for ( it=z.begin() ; it < z.end(); it++ )
@@ -124,10 +126,9 @@ vot--;
   if (con>=0)
     cout << c[con] << " es un Condorcet Winner!" << endl;
 
-  /**********
-  *********** Fin de Comprobacion
+  /********** 
+  ***********  Fin de Comprobacion 
   ***********/
 
   return 0;
 }
-
