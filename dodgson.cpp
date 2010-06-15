@@ -13,12 +13,12 @@ using namespace std;
 void BFSinit(vector< vector<int> > p, vector<Nodo> &l){
   int tam = p.size();
   Nodo ins;
-  for (int i=0; i<tam ; i++) {
+  for (int i = 0 ; i < tam ; i++) {
     vector<int> p1 = p[i];
-    for (int j=0;j<p1.size()-1;j++){
-      vector<int> p2 = permuta(j,j+1,p1);
+    for (int j = 0;j < p1.size() - 1;j++){
+      vector<int> p2 = permuta(j,j + 1,p1);
 
-      for (int k=0;k<p2.size();k++){
+      for (int k = 0;k < p2.size(); k++){
 	cout << p2[k] << " ";
       }
       cout << endl;
@@ -68,28 +68,28 @@ int main (int argc, char *argv[]) {
       getline (entrada,line);
      
       if (cont == 2){
-
-string sub;
-stringstream ss(line);
-ss >> sub;
-
-// Se lee el numero de candidatos y se hacen calculos de
-// almacenamiento para guardarlos eficientemente
-candidatos = atoi(sub.c_str());
-offset = bitsCand(candidatos);
-cand_por_int = 32/offset;
-float temp = (float)candidatos/(float)cand_por_int;
-tpref = (int)ceil(temp);
-break;
+	
+	string sub;
+	stringstream ss(line);
+	ss >> sub;
+	
+	// Se lee el numero de candidatos y se hacen calculos de
+	// almacenamiento para guardarlos eficientemente
+	candidatos = atoi(sub.c_str());
+	offset = bitsCand(candidatos);
+	cand_por_int = 32/offset;
+	float temp = (float)candidatos/(float)cand_por_int;
+	tpref = (int)ceil(temp);
+	break;
       }
       cont++;
     }
     entrada.close();
   }
   else cout << "No se pudo abrir el archivo\n";
-
+  
   vector< vector<int> > perfil; // Matriz que representa el perfil inicial
-
+  
   cont = 1;
   ifstream entrada2(archivoin.c_str()); // Stream contenedor del archivo de entrada
   if (entrada2.is_open()) {

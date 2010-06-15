@@ -126,6 +126,8 @@ int repetidos(Nodo x, Nodo y){
   }
 }
 
+
+
 /*
 
 int main () {
