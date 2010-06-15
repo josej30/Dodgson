@@ -9,3 +9,4 @@ int buscaCand(string,vector<string>);
 int N(int,int,vector<int>);
 int condorIndiv(int,vector< vector<int> >,vector<string>);
 int condorcet(vector< vector<int> >, vector<string>);
+int existe(vector<int>, int);

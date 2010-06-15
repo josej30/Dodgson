@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -83,3 +83,13 @@ int condorcet(vector< vector<int> > p, vector<string> c){
   return -1;
 }
 
+/* Funcion que revisa si existe un entero en un vector
+*/
+int existe(vector<int> a, int b){
+  for (unsigned i=0; i<a.size() ; i++) {
+    if (a[i] == b){
+      return 1;
+    }
+    return 0;
+  }
+}
