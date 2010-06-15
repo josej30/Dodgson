@@ -4,5 +4,11 @@ dodgson: dodgson.o functions.o functions.h nodo.o nodo.h
 nodo.o: nodo.cpp nodo.h
 	g++ -O3 -c nodo.cpp
 
+dodgson.o: dodgson.cpp
+	g++ -O3 -c dodgson.cpp
+
+functions.o: functions.cpp functions.h
+	g++ -O3 -c functions.cpp
+
 clean: 
 	rm -f dodgson.o dodgson functions.o nodo.o

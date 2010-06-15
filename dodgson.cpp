@@ -10,7 +10,26 @@
 
 using namespace std;
 
-int BFS(vector<int> cols, vector<Nodo> &m, int limite){
+void BFSinit(vector< vector<int> > p, vector<Nodo> &l){
+  int tam = p.size();
+  Nodo ins;
+  for (int i=0; i<tam ; i++) {
+    vector<int> p1 = p[i];
+    for (int j=0;j<p1.size()-1;j++){
+      vector<int> p2 = permuta(j,j+1,p1);
+
+      for (int k=0;k<p2.size();k++){
+	cout << p2[k] << " ";
+      }
+      cout << endl;
+
+      ins.insertar(p2);
+      l.push_back(ins);
+    }
+  }
+}
+
+void BFS(vector<int> cols, vector<Nodo> &m, int limite){
 
   /*  vector<int>::iterator it;
   int tam = m.size();
@@ -22,10 +41,8 @@ int BFS(vector<int> cols, vector<Nodo> &m, int limite){
       //      for ( it=z.begin() ; it < z.end(); it++ )
       cout << i << endl;
     }
-
+    
     }*/
-  return 0;
-  
 }
 
 int main (int argc, char *argv[]) {
@@ -44,7 +61,7 @@ int main (int argc, char *argv[]) {
   int cand_por_int = 0; // Candidatos que se guardan en un entero
   int tpref = 0; // Tamano en bytes de las preferencias
   vector<string> c; // Vector que contiene a los candidatos y funciona como una tabla de hash
-  vector< vector<int> > fifo;
+  vector<Nodo> fifo;
 
   if (entrada.is_open()) {
     while (! entrada.eof() ) {
@@ -80,51 +97,42 @@ break;
       getline (entrada2,line);
       
       if (cont == 2){
-string sub;
-stringstream ss(line);
-ss >> sub;
-
-while (ss >> sub){
-c.push_back(sub);
-}
+	string sub;
+	stringstream ss(line);
+	ss >> sub;
+	
+	while (ss >> sub){
+	  c.push_back(sub);
+	}
       }
       else if (cont > 3){
-string sub;
-stringstream ss(line);
-ss >> sub;
-int vot = atoi(sub.c_str());
-
-vector<int> a;
-while (ss >> sub){
-a.push_back(buscaCand(sub,c));
-}
-
-while (vot > 0){
-perfil.push_back(a);
-vot--;
-}
+	string sub;
+	stringstream ss(line);
+	ss >> sub;
+	int vot = atoi(sub.c_str());
+	
+	vector<int> a;
+	while (ss >> sub){
+	  a.push_back(buscaCand(sub,c));
+	}
+	
+	while (vot > 0){
+	  perfil.push_back(a);
+	  vot--;
+	}
       }
       cont++;
     }
     entrada2.close();
   }
   else cout << "No se pudo abrir el archivo\n";
-
-  /*********
-  ********** Comprobacion de que se guardan bien las cosas
-  **********/
-
-  /*
-
-  cout << "Candidatos: " << candidatos << endl;
-
-  cout << "Los candidatos son: ";
-  for (int i=0;i<candidatos;i++){
+  
+  // Aplicacion de algoritmos
+  
+  string str1("-bfs");
+  if (str1.compare(argv[1])==0){
+    BFSinit(perfil,fifo);
   }
-
-  */
-
-  vector< vector<int> > zzz = perfil;
 
   /* Este codigo imprime toda la matriz de preferencias (perfil) */
 
@@ -138,20 +146,7 @@ vot--;
       cout << " " << c[*it];
     cout << endl;
   }*/
-
-
-  /* int con = condorcet(zzz,c);
-  if (con>=0)
-    cout << c[con] << " es un Condorcet Winner!" << endl;
-  */
   
-  vector<int> a;
-  a.push_back(8);
-
-  vector<Nodo> nodeishon;
-
-  int asd = BFS(a,nodeishon,0);
-
   /*  vector<int>::iterator it;
   for ( it=b.begin() ; it < b.end(); it++ )
     cout << " " << *it;

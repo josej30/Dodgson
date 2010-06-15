@@ -50,7 +50,7 @@ int N(int x,int y,vector<int> v){
 /* Funcion que revisa si x es un Condorcet winner 
    Es decir, que para todo x!=y N(x,y) > n/2
 */
-int condorIndiv(int x,vector< vector<int> > p,vector<string> c){
+bool condorIndiv(int x,vector< vector<int> > p,vector<string> c){
 
   int tot[250];
   for (int r=0;r<250;r++)
@@ -66,9 +66,9 @@ int condorIndiv(int x,vector< vector<int> > p,vector<string> c){
   }
   for (int k=0; k<c.size(); k++){
     if (tot[k] < tam/2)
-      return 0;
+      return false;
   }
-  return 1;
+  return true;
 
 }
 
@@ -85,11 +85,19 @@ int condorcet(vector< vector<int> > p, vector<string> c){
 
 /* Funcion que revisa si existe un entero en un vector
 */
-int existe(vector<int> a, int b){
+bool existe(vector<int> a, int b){
   for (unsigned i=0; i<a.size() ; i++) {
     if (a[i] == b){
-      return 1;
+      return true;
     }
-    return 0;
+    return false;
   }
+}
+
+/* Funcion que permuta un vector */
+vector<int> permuta(int a, int b, vector<int> v){
+  int temp = v[a];
+  v[a]=v[b];
+  v[b]=temp;
+  return v;
 }
