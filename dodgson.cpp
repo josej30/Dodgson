@@ -10,39 +10,36 @@
 
 using namespace std;
 
+void BFS(vector<Nodo> &m, int limite){
+  // Ciclo hiper cochino para mostrar los nodos almacenados en la lista
+  /*  for (int i=0;i<m.size();i++){
+    cout << "muestro " << endl;
+    for (int j=0;j<m[i].perfil.size();j++){
+      for (int k=0;k<m[i].perfil[j].size();k++){
+	cout << m[i].perfil[j][k] << " ";
+      }
+    }
+    cout << endl;
+    }*/
+}
+
 void BFSinit(vector< vector<int> > p, vector<Nodo> &l){
   int tam = p.size();
-  Nodo ins;
   for (int i=0; i<tam ; i++) {
     vector<int> p1 = p[i];
     for (int j=0;j<p1.size()-1;j++){
       vector<int> p2 = permuta(j,j+1,p1);
 
-      for (int k=0;k<p2.size();k++){
-	cout << p2[k] << " ";
-      }
-      cout << endl;
+      vector<int>::iterator it;
+      it = p2.begin();
+      it = p2.insert(it,i);
 
+      Nodo ins;
       ins.insertar(p2);
       l.push_back(ins);
     }
   }
-}
-
-void BFS(vector<int> cols, vector<Nodo> &m, int limite){
-
-  /*  vector<int>::iterator it;
-  int tam = m.size();
-  for (int i=0; i<tam ; i++) {
-    vector<int> z = m.back();
-    m.pop_back();
-    // Busco las columnas que no haya expandido previamente
-    if (existe(cols,i)==0){
-      //      for ( it=z.begin() ; it < z.end(); it++ )
-      cout << i << endl;
-    }
-    
-    }*/
+  BFS(l,0);
 }
 
 int main (int argc, char *argv[]) {
