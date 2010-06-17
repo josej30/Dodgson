@@ -10,39 +10,36 @@
 
 using namespace std;
 
+void BFS(vector<Nodo> &m, int limite){
+  // Ciclo hiper cochino para mostrar los nodos almacenados en la lista
+  /* for (int i=0;i<m.size();i++){
+cout << "muestro " << endl;
+for (int j=0;j<m[i].perfil.size();j++){
+for (int k=0;k<m[i].perfil[j].size();k++){
+cout << m[i].perfil[j][k] << " ";
+}
+}
+cout << endl;
+}*/
+}
+
 void BFSinit(vector< vector<int> > p, vector<Nodo> &l){
   int tam = p.size();
-  Nodo ins;
-  for (int i = 0 ; i < tam ; i++) {
+  for (int i=0; i<tam ; i++) {
     vector<int> p1 = p[i];
-    for (int j = 0;j < p1.size() - 1;j++){
-      vector<int> p2 = permuta(j,j + 1,p1);
+    for (int j=0;j<p1.size()-1;j++){
+      vector<int> p2 = permuta(j,j+1,p1);
 
-      for (int k = 0;k < p2.size(); k++){
-	cout << p2[k] << " ";
-      }
-      cout << endl;
+      vector<int>::iterator it;
+      it = p2.begin();
+      it = p2.insert(it,i);
 
+      Nodo ins;
       ins.insertar(p2);
       l.push_back(ins);
     }
   }
-}
-
-void BFS(vector<int> cols, vector<Nodo> &m, int limite){
-
-  /*  vector<int>::iterator it;
-  int tam = m.size();
-  for (int i=0; i<tam ; i++) {
-    vector<int> z = m.back();
-    m.pop_back();
-    // Busco las columnas que no haya expandido previamente
-    if (existe(cols,i)==0){
-      //      for ( it=z.begin() ; it < z.end(); it++ )
-      cout << i << endl;
-    }
-    
-    }*/
+  BFS(l,0);
 }
 
 int main (int argc, char *argv[]) {
@@ -68,28 +65,28 @@ int main (int argc, char *argv[]) {
       getline (entrada,line);
      
       if (cont == 2){
-	
-	string sub;
-	stringstream ss(line);
-	ss >> sub;
-	
-	// Se lee el numero de candidatos y se hacen calculos de
-	// almacenamiento para guardarlos eficientemente
-	candidatos = atoi(sub.c_str());
-	offset = bitsCand(candidatos);
-	cand_por_int = 32/offset;
-	float temp = (float)candidatos/(float)cand_por_int;
-	tpref = (int)ceil(temp);
-	break;
+
+string sub;
+stringstream ss(line);
+ss >> sub;
+
+// Se lee el numero de candidatos y se hacen calculos de
+// almacenamiento para guardarlos eficientemente
+candidatos = atoi(sub.c_str());
+offset = bitsCand(candidatos);
+cand_por_int = 32/offset;
+float temp = (float)candidatos/(float)cand_por_int;
+tpref = (int)ceil(temp);
+break;
       }
       cont++;
     }
     entrada.close();
   }
   else cout << "No se pudo abrir el archivo\n";
-  
+
   vector< vector<int> > perfil; // Matriz que representa el perfil inicial
-  
+
   cont = 1;
   ifstream entrada2(archivoin.c_str()); // Stream contenedor del archivo de entrada
   if (entrada2.is_open()) {
@@ -97,29 +94,29 @@ int main (int argc, char *argv[]) {
       getline (entrada2,line);
       
       if (cont == 2){
-	string sub;
-	stringstream ss(line);
-	ss >> sub;
-	
-	while (ss >> sub){
-	  c.push_back(sub);
-	}
+string sub;
+stringstream ss(line);
+ss >> sub;
+
+while (ss >> sub){
+c.push_back(sub);
+}
       }
       else if (cont > 3){
-	string sub;
-	stringstream ss(line);
-	ss >> sub;
-	int vot = atoi(sub.c_str());
-	
-	vector<int> a;
-	while (ss >> sub){
-	  a.push_back(buscaCand(sub,c));
-	}
-	
-	while (vot > 0){
-	  perfil.push_back(a);
-	  vot--;
-	}
+string sub;
+stringstream ss(line);
+ss >> sub;
+int vot = atoi(sub.c_str());
+
+vector<int> a;
+while (ss >> sub){
+a.push_back(buscaCand(sub,c));
+}
+
+while (vot > 0){
+perfil.push_back(a);
+vot--;
+}
       }
       cont++;
     }
@@ -137,25 +134,24 @@ int main (int argc, char *argv[]) {
   /* Este codigo imprime toda la matriz de preferencias (perfil) */
 
   /*cout << endl << "Matriz de preferencias: " << endl;
-  vector<int>::iterator it;
-  int tam = perfil.size();
-  for (unsigned i=0; i<tam ; i++) {
-    vector<int> z = perfil.back();
-    perfil.pop_back();
-    for ( it=z.begin() ; it < z.end(); it++ )
-      cout << " " << c[*it];
-    cout << endl;
-  }*/
+vector<int>::iterator it;
+int tam = perfil.size();
+for (unsigned i=0; i<tam ; i++) {
+vector<int> z = perfil.back();
+perfil.pop_back();
+for ( it=z.begin() ; it < z.end(); it++ )
+cout << " " << c[*it];
+cout << endl;
+}*/
   
-  /*  vector<int>::iterator it;
-  for ( it=b.begin() ; it < b.end(); it++ )
-    cout << " " << *it;
-    cout << endl;*/
+  /* vector<int>::iterator it;
+for ( it=b.begin() ; it < b.end(); it++ )
+cout << " " << *it;
+cout << endl;*/
 
   /**********
-  *********** Fin de Comprobacion
-  ***********/
+*********** Fin de Comprobacion
+***********/
 
   return 0;
 }
-
