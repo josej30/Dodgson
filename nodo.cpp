@@ -18,31 +18,3 @@ void Nodo::mostrar(){
   }
   
 }
-
-/* Funcion para verificar que dos nodos sean iguales, 
-   retorna -1 sino lo son, 0 en caso contrario */
-
-int repetidos(Nodo x, Nodo y){
-  // Si la matriz no es del mismo tamano ya descarto que sean iguales
-  if (x.perfil.size() != y.perfil.size()){
-    return -1;
-  }
-  else{
-    for (unsigned i=0; i< x.perfil.size() ; i++) {    
-      vector<int> z = x.perfil.back();
-      vector<int> w = y.perfil.back();
-      x.perfil.pop_back();
-      y.perfil.pop_back();
-      // Verifico que cada columna tenga el mismo tamano
-      if  (z.size() != w.size())
-	return -1;
-      else{
-	for ( unsigned i = 0; i < z.size(); i++ )
-	  // Verifico que los elementos sean iguales
-	  if (z[i] != w[i])
-	    return -1;
-	return 0;
-      }
-    }
-  }
-}

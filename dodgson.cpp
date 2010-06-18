@@ -6,21 +6,74 @@
 #include <stdlib.h>
 #include <cmath>
 #include "functions.h"
-#include "nodo.h"
 
 using namespace std;
 
-void BFS(vector<Nodo> &m, int limite){
+/*
+Funcion Principal BFS:
+
+Entrada: 
+p, perfil original de preferencias
+&m, cola de Nodos para expandir
+limit, limite al que llega BFS al encontrar el primer condorcet
+*/
+void BFS(vector< vector<int> > p, vector<Nodo> &m, int limite){
+
+  int tam_m = m.size();
+  for (int i=0;i<tam_m;i++){
+    vector<int> cols_perm;
+    for (int j=0;j<m[i].perfil.size();j++){
+      cols_perm.push_back(m[i].perfil[j][0]);
+    }
+    for (int k=0;k<p.size();k++){
+      if (!existe(cols_perm,k)){
+	vector<int> temp = p[k];
+      
+	for (int ii=0;ii<temp.size()-1;ii++){
+	  vector<int> p2 = permuta(ii,ii+1,temp);
+	  Nodo push;
+
+	  vector<vector <int> > prefs = m[i].perfil;
+	  vector<int>::iterator it;
+	  it = p2.begin();
+	  it = p2.insert(it,k);
+
+	  prefs.push_back(p2);
+	  push.perfil = prefs;
+
+	  bool insertar = true;
+	  for (int cont=0;cont<m.size();cont++){
+	    if (repetidos(push,m[cont]))
+	      insertar = false;
+	  }
+	  
+	  if (insertar)
+	    m.push_back(push);
+
+	  printf("%i nodos expandidos\n",m.size()); 
+	  
+	}
+      }
+    }
+  }
+
+
   // Ciclo hiper cochino para mostrar los nodos almacenados en la lista
   /*  for (int i=0;i<m.size();i++){
-    cout << "muestro " << endl;
+    cout << "Nodo" << endl;
     for (int j=0;j<m[i].perfil.size();j++){
       for (int k=0;k<m[i].perfil[j].size();k++){
 	cout << m[i].perfil[j][k] << " ";
       }
+      cout << endl;
     }
-    cout << endl;
     }*/
+
+  if (limite == 10)
+    return;
+
+  BFS(p,m,limite+1);
+
 }
 
 void BFSinit(vector< vector<int> > p, vector<Nodo> &l){
@@ -39,7 +92,8 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l){
       l.push_back(ins);
     }
   }
-  BFS(l,0);
+  //  sust(l,p);
+  BFS(p,l,0);
 }
 
 int main (int argc, char *argv[]) {
@@ -133,7 +187,7 @@ break;
 
   /* Este codigo imprime toda la matriz de preferencias (perfil) */
 
-  /*cout << endl << "Matriz de preferencias: " << endl;
+  /*  cout << endl << "Matriz de preferencias: " << endl;
   vector<int>::iterator it;
   int tam = perfil.size();
   for (unsigned i=0; i<tam ; i++) {
@@ -142,7 +196,7 @@ break;
     for ( it=z.begin() ; it < z.end(); it++ )
       cout << " " << c[*it];
     cout << endl;
-  }*/
+    }*/
   
   /*  vector<int>::iterator it;
   for ( it=b.begin() ; it < b.end(); it++ )

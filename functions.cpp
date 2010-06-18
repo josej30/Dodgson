@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include "functions.h"
 
 using namespace std;
 
@@ -100,4 +101,45 @@ vector<int> permuta(int a, int b, vector<int> v){
   v[a]=v[b];
   v[b]=temp;
   return v;
+}
+
+/* Funcion que modifica una matriz de preferencias
+   de acuerdo a un vector dado */
+void sust(vector<Nodo> v, vector<vector <int> > &pref){
+
+  for (int i=0;i<v.size();i++){
+    for (int j=0;j<v[i].perfil.size();j++){
+      for (int k=0;i<v[i].perfil[j].size();k++){
+	cout << v[i].perfil[j][k] << endl;
+      }
+    }
+  }
+}
+
+
+/* Funcion para verificar que dos nodos sean iguales, 
+   retorna -1 sino lo son, 0 en caso contrario */
+bool repetidos(Nodo x, Nodo y){
+  // Si la matriz no es del mismo tamano ya descarto que sean iguales
+  if (x.perfil.size() != y.perfil.size()){
+    return false;
+  }
+  else{
+    for (unsigned i=0; i< x.perfil.size() ; i++) {    
+      vector<int> z = x.perfil.back();
+      vector<int> w = y.perfil.back();
+      x.perfil.pop_back();
+      y.perfil.pop_back();
+      // Verifico que cada columna tenga el mismo tamano
+      if  (z.size() != w.size())
+	return false;
+      else{
+	for ( unsigned i = 0; i < z.size(); i++ )
+	  // Verifico que los elementos sean iguales
+	  if (z[i] != w[i])
+	    return false;
+	return true;
+      }
+    }
+  }
 }
