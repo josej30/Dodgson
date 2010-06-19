@@ -19,8 +19,6 @@ limit, limite al que llega BFS al encontrar el primer condorcet
 */
 void BFS(vector< vector<int> > p, vector<Nodo> &m, int limite, vector<string> cands){
 
-  cout << "nodo=" << limite << endl;
-
   Nodo nod = m[0];
   m.erase(m.begin());
 
@@ -36,25 +34,12 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int limite, vector<string> ca
       }
     }
     if (reemplazar)
-      modif.push_back(vreemp);
+      modif[i]=vreemp;
     else
-      modif.push_back(p[i]);
+      modif[i]=p[i];
   }
 
-
-
-  
-  /*  cout << modif.size() << endl;
-  for (int i=0;i<modif.size();i++){
-    for (int k=0;k<modif[i].size();k++){
-      cout << modif[i][k] << " ";
-    }
-    cout << endl;
-    }*/
-
-
-
-  vector<int> condor = condorcet(modif,cands);
+  vector<int> condor = condorcet(nod.perfil,cands);
   if (condor.size()>0){
     cout << "Dodgson winner: ";
     for (int cont=0;cont<condor.size();cont++)
@@ -63,35 +48,38 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int limite, vector<string> ca
     return;
   }
     
-  vector<int> cols_perm;
-  for (int j=0;j<nod.perfil.size();j++){
-    cols_perm.push_back(nod.perfil[j][0]);
-  }
-  for (int k=0;k<p.size();k++){
-    if (!existe(cols_perm,k)){
-      vector<int> temp = p[k];
+  int tam_m = m.size();
+  for (int i=0;i<tam_m;i++){
+    vector<int> cols_perm;
+    for (int j=0;j<m[i].perfil.size();j++){
+      cols_perm.push_back(m[i].perfil[j][0]);
+    }
+    for (int k=0;k<p.size();k++){
+      if (!existe(cols_perm,k)){
+	vector<int> temp = p[k];
       
-      for (int ii=0;ii<temp.size()-1;ii++){
-	vector<int> p2 = permuta(ii,ii+1,temp);
-	Nodo push;
+	for (int ii=0;ii<temp.size()-1;ii++){
+	  vector<int> p2 = permuta(ii,ii+1,temp);
+	  Nodo push;
 
-	vector<vector <int> > prefs = nod.perfil;
-	vector<int>::iterator it;
-	it = p2.begin();
-	it = p2.insert(it,k);
-	
-	prefs.push_back(p2);
-	push.perfil = prefs;
-	
-	bool insertar = true;
-	for (int cont=0;cont<m.size();cont++){
+	  vector<vector <int> > prefs = m[i].perfil;
+	  vector<int>::iterator it;
+	  it = p2.begin();
+	  it = p2.insert(it,k);
+
+	  prefs.push_back(p2);
+	  push.perfil = prefs;
+
+	  bool insertar = true;
+	  for (int cont=0;cont<m.size();cont++){
 	    if (repetidos(push,m[cont]))
 	      insertar = false;
+	  }
+	  
+	  if (insertar)
+	    m.push_back(push);
+	  
 	}
-	
-	if (insertar)
-	  m.push_back(push);
-	
       }
     }
   }
