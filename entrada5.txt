@@ -1,6 +1,6 @@
 profile test
 9 a b c x y z p q r
 3
-1 a b c
-1 x y z
-1 p q r
+5 a b c
+5 x y z
+5 p q r

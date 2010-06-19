@@ -8,6 +8,7 @@ void Nodo::insertar(vector<int> c) {
   perfil.push_back(c);
 }
 
+
 void Nodo::mostrar(){
   MatPref perfil_aux = perfil;
   int tam = perfil.size();
@@ -158,4 +159,5 @@ int main () {
   cout << "Son iguales: " << repetidos(nodo,nodo1) << endl;
   return 0;
   }*/
+
 
