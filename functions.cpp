@@ -56,32 +56,31 @@ bool condorIndiv(int x,vector< vector<int> > p,vector<string> c){
   int tot[250];
   for (int r=0;r<250;r++)
     tot[r]=0;
-  vector<int>::iterator it;
-  int tam = p.size();
-  for (unsigned i=0; i<tam ; i++) {    
-    vector<int> z = p.back();
-    p.pop_back();
+  for (int i=0; i<p.size(); i++) {
     for (int j=0; j<c.size(); j++){
-      tot[j] = tot[j] + N(x,j,z);
+      tot[j] = tot[j] + N(x,j,p[i]);
     }
   }
   for (int k=0; k<c.size(); k++){
-    if (tot[k] < tam/2)
-      return false;
+    if (k!=x){
+      if (tot[k] < p.size()/2){
+	return false;
+      }
+    }
   }
   return true;
-
 }
 
 
 /* Funcion que dado un perfil, revisa si tiene Condorcet
    Winner. Retorna el ganador. Si no hay retorna -1.
 */
-int condorcet(vector< vector<int> > p, vector<string> c){
+vector<int> condorcet(vector< vector<int> > p, vector<string> c){
+  vector <int> res;
   for (int i=0;i<c.size();i++)
     if (condorIndiv(i,p,c))
-      return i;
-  return -1;
+      res.push_back(i);
+  return res;
 }
 
 /* Funcion que revisa si existe un entero en un vector

@@ -17,8 +17,19 @@ p, perfil original de preferencias
 &m, cola de Nodos para expandir
 limit, limite al que llega BFS al encontrar el primer condorcet
 */
-void BFS(vector< vector<int> > p, vector<Nodo> &m, int limite){
+void BFS(vector< vector<int> > p, vector<Nodo> &m, int limite, vector<string> cands){
 
+  Nodo nod = m[0];
+  
+  vector<int> condor = condorcet(nod.perfil,cands);
+  if (condor.size()>0){
+    cout << "Dodgson winner: ";
+    for (int cont=0;cont<condor.size();cont++)
+      cout << cands[condor[cont]] << " ";
+    cout << endl;
+    return;
+  }
+  
   int tam_m = m.size();
   for (int i=0;i<tam_m;i++){
     vector<int> cols_perm;
@@ -50,7 +61,7 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int limite){
 	  if (insertar)
 	    m.push_back(push);
 
-	  printf("%i nodos expandidos\n",m.size()); 
+	  //	  printf("%i nodos expandidos\n",m.size()); 
 	  
 	}
       }
@@ -69,14 +80,21 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int limite){
     }
     }*/
 
-  if (limite == 10)
-    return;
-
-  BFS(p,m,limite+1);
+  BFS(p,m,limite+1,cands);
 
 }
 
-void BFSinit(vector< vector<int> > p, vector<Nodo> &l){
+void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
+
+  vector<int> condor = condorcet(p,cands);
+  if (condor.size()>0){
+    cout << "Dodgson winner: ";
+    for (int cont=0;cont<condor.size();cont++)
+      cout << cands[condor[cont]] << " ";
+    cout << endl;
+    return;
+  }
+  
   int tam = p.size();
   for (int i=0; i<tam ; i++) {
     vector<int> p1 = p[i];
@@ -92,8 +110,7 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l){
       l.push_back(ins);
     }
   }
-  //  sust(l,p);
-  BFS(p,l,0);
+  BFS(p,l,0,cands);
 }
 
 int main (int argc, char *argv[]) {
@@ -181,8 +198,8 @@ break;
   // Aplicacion de algoritmos
   
   string str1("-bfs");
-  if (str1.compare(argv[1])==0){
-    BFSinit(perfil,fifo);
+  if (str1.compare(argv[1])==0){    
+    BFSinit(perfil,fifo,c);
   }
 
   /* Este codigo imprime toda la matriz de preferencias (perfil) */
