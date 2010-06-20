@@ -4,6 +4,11 @@
 
 using namespace std;
 
+/*Nodo::Nodo(vector< vector <int> > p){
+	perfil = p;	
+}*/
+
+
 void Nodo::insertar(vector<int> c) {
   perfil.push_back(c);
 }
@@ -129,10 +134,10 @@ int repetidos(Nodo x, Nodo y){
 
 
 
-/*
 
+/*
 int main () {
-  Nodo nodo;
+ Nodo nodo;
   Nodo nodo1;
   vector <int> d, e, f,g,i;
   d.push_back(1);  d.push_back(0);  d.push_back(8);
@@ -158,6 +163,6 @@ int main () {
   nodo1.mostrar();
   cout << "Son iguales: " << repetidos(nodo,nodo1) << endl;
   return 0;
-  }*/
-
+  }
+*/
 

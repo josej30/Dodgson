@@ -118,7 +118,7 @@ void sust(vector<Nodo> v, vector<vector <int> > &pref){
 
 /* Funcion para verificar que dos nodos sean iguales, 
    retorna -1 sino lo son, 0 en caso contrario */
-bool repetidos(Nodo x, Nodo y){
+/*bool repetidos(Nodo x, Nodo y){
   // Si la matriz no es del mismo tamano ya descarto que sean iguales
   if (x.perfil.size() != y.perfil.size()){
     return false;
@@ -141,4 +141,75 @@ bool repetidos(Nodo x, Nodo y){
       }
     }
   }
+  }*/
+
+
+/* Funcion que retorna el numero de agentes adicionales
+   que deben preferir x sobre y para que x triunfe.
+   Entrada: int x Candidato 1
+            int y Candidado 2
+	    int n Numero de votantes
+	    Nodo nodo Matriz de preferencias 
+
+ */
+int defct(int x, int y, int n, Nodo nodo){
+  int techo = ceil((n+1)/2.);
+  int N_total = 0;
+  int N_aux = 0;
+  vector< vector <int> > aux = nodo.perfil;
+
+  /* Recorremos el nodo obtener el numero de preferencias de x sobre y*/
+  for (unsigned i = 0; i < nodo.perfil.size(); i++){
+    vector <int> z = aux.back();
+    aux.pop_back();
+    N_aux = N(x,y,z);
+    N_total =+ N_aux;
+  }
+
+  return max(0,techo - N_total);
+
 }
+
+/* Funcion que suma los cambios necesarios para que x 
+   triunfe sobre cada y != x.
+   Entrada: int x Candidato 1
+            vector<int> cand vector que contiene todos los candidatos.
+	    int n Numero de votantes
+	    Nodo nodo Matriz de preferencias
+ */
+int T(int x, vector <int> cand,int n, Nodo nodo){
+  int suma = 0;
+  int aux = 0;
+  for (unsigned i = 0; i < cand.size(); i++){
+    if (cand[i] != x){
+      aux = defct(x,cand[i],n,nodo);
+      suma = suma + aux;
+    }
+    
+  }  
+
+}
+
+int factorial(int n) {
+   if(n < 0) return 0;
+   else if(n > 1) return n*factorial(n-1); /* Recursividad */
+   return 1; /* Condición de terminación, n == 1 */
+}
+
+
+/* Funcion que suma los cambios necesarios para que x 
+   triunfe sobre cada y != x de forma mejorado.
+   Entrada: int x Candidato 1
+            vector<int> cand vector que contiene todos los candidatos.
+	    int n Numero de votantes
+	    Nodo nodo Matriz de preferencias
+ */
+int T_prima(int x, vector<int> cand, int n, Nodo nodo){
+  
+  int m = factorial(n);
+  int t = T(x,cand,n,nodo);
+  return (t + log2(m)+ 1) /log2(m) + 3;
+
+
+}
+

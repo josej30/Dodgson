@@ -1,7 +1,5 @@
 Detalles:
 - Creo que se deberia leer exactamente el numero de perfiles que dice el numero de la 3era linea.
-- Se estan pasando los candidatos a ints? Lei por ahi un vector de string. Donde se hace la conversion?
-
 
 
 
