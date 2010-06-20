@@ -4,9 +4,11 @@
 
 using namespace std;
 
-Nodo::Nodo(vector< vector <int> > p){
+/*Nodo::Nodo(vector< vector <int> > p){
 	perfil = p;	
-}
+}*/
+
+
 void Nodo::insertar(vector<int> c) {
   perfil.push_back(c);
 }

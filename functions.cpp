@@ -63,7 +63,7 @@ bool condorIndiv(int x,vector< vector<int> > p,vector<string> c){
   }
   for (int k=0; k<c.size(); k++){
     if (k!=x){
-      if (tot[k] <= p.size()/2){
+      if (tot[k] < p.size()/2){
 	return false;
       }
     }
@@ -112,6 +112,68 @@ void sust(vector<Nodo> v, vector<vector <int> > &pref){
 	cout << v[i].perfil[j][k] << endl;
       }
     }
+  }
+}
+
+
+bool repetidos(Nodo x, Nodo y){
+  
+  MatPref n1 = x.perfil;
+  MatPref n2 = y.perfil;
+  int j;
+
+  // Veo si el tamano de ambos nodos es igual
+  if (n1.size() != n2.size())
+    return false;
+  else{
+    // Fijo la ultima columna del nodo 1.
+    for (unsigned i = x.perfil.size() - 1; i >= 1; i--){
+      vector<int> pref_n1 = n1.at(i);
+      j = 0;
+      // Itero sobre las columnas del nodo 2 en busca de una columna igual.
+      while (j < n2.size()){
+	vector<int> pref_n2 = n2.at(j);
+	// Verifico que la matriz este compuesta de las mismas columnas.
+	if (pref_n1[0] != pref_n2[0]) 
+	  j++;
+	else{
+	  //Itero sobre los elementos de las columnas
+	  for (unsigned k = 1; k < pref_n2.size(); k++ ){
+	    //Si hay algun elemento diferente concluyo que son diferentes
+	    if (pref_n1[k] != pref_n2[k]){
+	      return false;
+	    }	   
+	  }
+	  // Voy eliminando columnas hasta quedar con una sola (caso base)
+	  if (n1.size() >=1  and n2.size() >= 1){
+	    n1.erase(n1.begin() + i);
+	    n2.erase(n2.begin() + j);
+	    j = y.perfil.size();
+	  }
+
+	}
+      }
+      /* Corroboro que luego de iterar sobre el nodo 2 se haya eliminado una columna
+	 lo que indica que hubo al menos una coincidencia */
+      if (n1.size() == x.perfil.size()) 
+	return false;	                
+    
+    }
+    /* Caso base, me quedan dos columnas las cuales voy a comparar*/
+    if (n1.size() == 1 and n2.size() == 1){
+      vector <int> pref_n1 = n1.at(0);
+      vector <int> pref_n2 = n2.at(0);
+      if (pref_n1[0] == pref_n2[0]){
+	for (unsigned k = 1; k < pref_n2.size(); k++ ){
+	  if (pref_n1[k] != pref_n2[k])
+	    return false;
+	}
+	return true;
+      }
+      else
+	return false;
+    }
+      
   }
 }
 
@@ -213,3 +275,8 @@ int T_prima(int x, vector<int> cand, int n, Nodo nodo){
 
 }
 
+
+int heurista(Nodo n){
+
+
+}

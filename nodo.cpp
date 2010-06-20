@@ -71,7 +71,7 @@ void Nodo::mostrar(){
 }*/
 
 
-int repetidos(Nodo x, Nodo y){
+/*int repetidos(Nodo x, Nodo y){
   
   MatPref n1 = x.perfil;
   MatPref n2 = y.perfil;
@@ -110,12 +110,12 @@ int repetidos(Nodo x, Nodo y){
       }
       /* Corroboro que luego de iterar sobre el nodo 2 se haya eliminado una columna
 	 lo que indica que hubo al menos una coincidencia */
-      if (n1.size() == x.perfil.size()) 
+  /*    if (n1.size() == x.perfil.size()) 
 	return 0;	                
     
     }
     /* Caso base, me quedan dos columnas las cuales voy a comparar*/
-    if (n1.size() == 1 and n2.size() == 1){
+    /*if (n1.size() == 1 and n2.size() == 1){
       vector <int> pref_n1 = n1.at(0);
       vector <int> pref_n2 = n2.at(0);
       if (pref_n1[0] == pref_n2[0]){
@@ -130,7 +130,7 @@ int repetidos(Nodo x, Nodo y){
     }
       
   }
-}
+}*/
 
 
 
