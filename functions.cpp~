@@ -277,4 +277,3 @@ int T_prima(int x, vector<int> cand, int n, Nodo nodo){
 
 
 
-
