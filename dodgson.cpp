@@ -19,41 +19,32 @@ limit, limite al que llega BFS al encontrar el primer condorcet
 */
 void BFS(vector< vector<int> > p, vector<Nodo> &m, int limite, vector<string> cands){
 
-  cout << "nodo=" << limite << endl;
-
   Nodo nod = m[0];
   m.erase(m.begin());
 
+  cout << "profundidad=" << nod.perfil.size() << endl;
+  cout << "nodos expandidos=" << limite << endl;
+  cout << "nodos generados=" << m.size()+limite << endl;
+
   vector<vector <int> > modif;
   for (int i=0;i<p.size();i++){
-    bool reemplazar = false;
-    vector<int> vreemp;
+    vector<int> alfa = p[i];
     for (int j=0;j<nod.perfil.size();j++){
-      if (p[i][0]==nod.perfil[j][0]){
-	reemplazar=true;
-	vreemp = nod.perfil[j];
-	break;
-      }
+      if (nod.perfil[j][0]==p[i][0])
+	alfa = nod.perfil[j];
     }
-    if (reemplazar)
-      modif.push_back(vreemp);
-    else
-      modif.push_back(p[i]);
+    modif.push_back(alfa);
   }
 
-
-
-  
-  /*  cout << modif.size() << endl;
   for (int i=0;i<modif.size();i++){
+    modif[i].erase(modif[i].begin());
     for (int k=0;k<modif[i].size();k++){
       cout << modif[i][k] << " ";
     }
     cout << endl;
-    }*/
-
-
-
+  }
+  
+    
   vector<int> condor = condorcet(modif,cands);
   if (condor.size()>0){
     cout << "Dodgson winner: ";
@@ -67,33 +58,37 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int limite, vector<string> ca
   for (int j=0;j<nod.perfil.size();j++){
     cols_perm.push_back(nod.perfil[j][0]);
   }
+
+  Nodo push;
+  vector<vector <int> > prefs = nod.perfil;
+
   for (int k=0;k<p.size();k++){
     if (!existe(cols_perm,k)){
       vector<int> temp = p[k];
-      
+
+      int pos = temp[0];
+      temp.erase(temp.begin());
       for (int ii=0;ii<temp.size()-1;ii++){
 	vector<int> p2 = permuta(ii,ii+1,temp);
-	Nodo push;
-
-	vector<vector <int> > prefs = nod.perfil;
 	vector<int>::iterator it;
 	it = p2.begin();
-	it = p2.insert(it,k);
-	
+	it = p2.insert(it,pos);	
+
 	prefs.push_back(p2);
-	push.perfil = prefs;
-	
-	bool insertar = true;
-	for (int cont=0;cont<m.size();cont++){
-	    if (repetidos(push,m[cont]))
-	      insertar = false;
-	}
-	
-	if (insertar)
-	  m.push_back(push);
-	
       }
     }
+
+    push.perfil = prefs;
+    
+    bool insertar = true;
+    for (int cont=0;cont<m.size();cont++){
+      if (repetidos(push,m[cont]))
+	insertar = false;
+    }
+    
+    if (insertar)
+      m.push_back(push);
+    
   }
 
 
@@ -131,13 +126,22 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
 
       vector<int>::iterator it;
       it = p2.begin();
-      it = p2.insert(it,i);
+      it = p2.insert(it,j);	
 
       Nodo ins;
       ins.insertar(p2);
       l.push_back(ins);
     }
   }
+
+  // Modifico la matriz colocandole el numero de la preferencia
+  // al empezar cada columna
+  for(int i=0;i<p.size();i++){
+    vector<int>::iterator it;
+    it = p[i].begin();
+    it = p[i].insert(it,i);
+  }
+
   BFS(p,l,0,cands);
 }
 
