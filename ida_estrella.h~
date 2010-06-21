@@ -1,0 +1,13 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <stdlib.h>
+#include <cmath>
+#include "functions.h"
+#include "limits.h"
+
+vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int costo_limit, int cambios, vector<Nodo> &suc, vector<string> cands));
+
+vector<int>  IDA_estrella();

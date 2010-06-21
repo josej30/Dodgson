@@ -12,13 +12,12 @@
 int infinito = INT_MAX;
 int myints[] = {0,0};
 vector<int> resultado (myints, myints + sizeof(myints) / sizeof(int) );
-
-
-
 int cambios= -1;
+int candidatos = 0; // Cantidad de candidatos
 
 using namespace std;
 
+ 
 /*
 Funcion Principal BFS:
 
@@ -157,7 +156,8 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
   BFS(p,l,0,cands);
 }
 
-/* Funcion DFS que expande los nodos que prometan una mejor solucion
+/* Funcion DFS que expande los nodos que prometan una mejor solucion,
+   esta funcion es usada en la funcion IDA_estrella
    Entrada: int costo_inicial Costo inicial de expandir los nodos
             Nodo nodo Nodo actual que se va a expandir
 	    int costo_limit Limite hasta el cual se va a expandir
@@ -165,20 +165,22 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
 	    vector<Nodo> suc  Vector que tiene los sucesores de un nodo
 	    vector<string> cands Vector de candidatos
 */
+ 
 vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int costo_limit, int cambios, vector<Nodo> &suc, vector<string> cands){
 
-    cout << "start_cost:" << costo_inicial << ", cost_limit:"<< costo_limit << ",cambios" << cambios << endl; 
+    cout << "costo_inicial:" << costo_inicial << ", costo_limit:"<< costo_limit << ",cambios" << cambios << endl; 
     cout << "entra" << endl;
+   
     cambios++;
-    int costo_minimo = costo_inicial + 1; //heuristica(perfil);
+    int costo_minimo = costo_inicial + heuristica(n,candidatos, cands);
     if (costo_minimo > costo_limit){
-      resultado.at(0) = -1;
-      resultado.at(1) = costo_minimo;
+      resultado.at(0) = -1; // Valor que indica que se paso el limite
+      resultado.at(1) = costo_limit;
       return resultado;
     }
     
-  /* Verifico si de entrada hay un condorcet */
-    vector<int> condor = condorcet(perfil,cands);
+  /* Verifico si  hay un condorcet */
+   vector<int> condor = condorcet(perfil,cands);
     if (condor.size()> 0){
       cout << "Dodgson winner: ";
       for (int cont=0;cont<condor.size();cont++)
@@ -190,6 +192,7 @@ vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int co
     }
     
     
+    //Se obtienen los nodos sucesores permutando los valores de los vectores */
     int tam = perfil.size();
     for (int i=0; i<tam ; i++) {
       vector<int> p1 = perfil[i];
@@ -219,9 +222,10 @@ vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int co
     
     // Reviso cada uno de los sucesores */
     for (unsigned j = 0; j < suc.size(); j++){
+      /*Se asume que el costo de ir de un nodo a otro es 1 */
       int nuevoCostoInicial = costo_inicial + 1;
       resultados_aux = DFS(nuevoCostoInicial,perfil, suc[j], costo_limit, cambios,suc,cands);
-      
+       
       if (resultados_aux.at(0) != -1){
 	resultado.at(0) = resultados_aux.at(0);
 	resultado.at(1) = resultados_aux.at(1);
@@ -235,34 +239,53 @@ vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int co
       return resultado;
       
       
-      
-      //  DFS(perfil,suc,0,cands);
     }
     
   }
-  
-  int main (int argc, char *argv[]) {
-    
-    if (argc < 3){
-      printf("USO: ./dodgson {-ida|-bfs} [-all] [-final <archivo_salida>] <archivo_entrada>\n");
-      exit(-1);
-    }
-    
-    string archivoin = argv[argc-1];
-    int cont = 1; // Contador de las lineas del archivo
-    string line; // String que contiene la linea leida
-    ifstream entrada(archivoin.c_str()); // Stream contenedor del archivo de entrada
-    int candidatos; // Cantidad de candidatos
-    int offset = 0;
-    int cand_por_int = 0; // Candidatos que se guardan en un entero
-    int tpref = 0; // Tamano en bytes de las preferencias
-    vector<string> c; // Vector que contiene a los candidatos y funciona como una tabla de hash
-    vector<Nodo> fifo;
+ 
 
-    if (entrada.is_open()) {
-      while (! entrada.eof() ) {
-	getline (entrada,line);
-	
+vector<int>  IDA_estrella (vector <vector <int> > perfil, vector<string> cand){
+  
+  vector<int> res1 (myints, myints + sizeof(myints) / sizeof(int) );
+  vector<Nodo> lista;
+  Nodo aux;
+  aux.perfil = perfil;
+  float costo_limite = heuristica(aux,candidatos,cand);
+  cout << costo_limite << endl;
+  while(true){
+    res1 = DFS(0,perfil,aux,costo_limite,-1,lista,cand);
+    if (res1[0] != -1) 
+      return resultado;
+    if (res1[1] == infinito){
+    	res1[0] = infinito;
+    	return res1;
+    }
+  } 
+  return res1;
+  
+}
+
+int main (int argc, char *argv[]) {
+  
+  if (argc < 3){
+    printf("USO: ./dodgson {-ida|-bfs} [-all] [-final <archivo_salida>] <archivo_entrada>\n");
+    exit(-1);
+  }
+  
+  string archivoin = argv[argc-1];
+  int cont = 1; // Contador de las lineas del archivo
+  string line; // String que contiene la linea leida
+  ifstream entrada(archivoin.c_str()); // Stream contenedor del archivo de entrada
+  int offset = 0;
+  int cand_por_int = 0; // Candidatos que se guardan en un entero
+  int tpref = 0; // Tamano en bytes de las preferencias
+  vector<string> c; // Vector que contiene a los candidatos y funciona como una tabla de hash
+  vector<Nodo> fifo;
+  
+  if (entrada.is_open()) {
+    while (! entrada.eof() ) {
+      getline (entrada,line);
+      
       if (cont == 2){
 	
 	string sub;
@@ -333,10 +356,10 @@ vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int co
       BFSinit(perfil,fifo,c);
     }
     else if (str2.compare(argv[1])== 0){
-      //  cout << "hola";
-      res1 = DFS(0,perfil, aux,100,-1,fifo,c);
-      cout << res1[0] << endl;
-      cout << res1[1] << endl;
+      //cout << "hola";
+      res1 = IDA_estrella(perfil,c);
+      //cout << res1[0] << endl;
+      //cout << res1[1] << endl;
     }
     
     /* Este codigo imprime toda la matriz de preferencias (perfil) */

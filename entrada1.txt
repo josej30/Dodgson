@@ -4,4 +4,4 @@ profile
 1 c b a d
 1 b a d c
 1 a c d b 
-1 d b c d
+1 d c a b

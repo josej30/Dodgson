@@ -3,6 +3,8 @@
 #include <vector>
 #include <iostream>
 #include "functions.h"
+#include "limits.h"
+
 
 using namespace std;
 
@@ -178,34 +180,6 @@ bool repetidos(Nodo x, Nodo y){
 }
 
 
-/* Funcion para verificar que dos nodos sean iguales, 
-   retorna -1 sino lo son, 0 en caso contrario */
-/*bool repetidos(Nodo x, Nodo y){
-  // Si la matriz no es del mismo tamano ya descarto que sean iguales
-  if (x.perfil.size() != y.perfil.size()){
-    return false;
-  }
-  else{
-    for (unsigned i=0; i< x.perfil.size() ; i++) {    
-      vector<int> z = x.perfil.back();
-      vector<int> w = y.perfil.back();
-      x.perfil.pop_back();
-      y.perfil.pop_back();
-      // Verifico que cada columna tenga el mismo tamano
-      if  (z.size() != w.size())
-	return false;
-      else{
-	for ( unsigned i = 0; i < z.size(); i++ )
-	  // Verifico que los elementos sean iguales
-	  if (z[i] != w[i])
-	    return false;
-	return true;
-      }
-    }
-  }
-  }*/
-
-
 /* Funcion que retorna el numero de agentes adicionales
    que deben preferir x sobre y para que x triunfe.
    Entrada: int x Candidato 1
@@ -225,9 +199,9 @@ int defct(int x, int y, int n, Nodo nodo){
     vector <int> z = aux.back();
     aux.pop_back();
     N_aux = N(x,y,z);
-    N_total =+ N_aux;
+    N_total = N_total + N_aux;
   }
-
+ 
   return max(0,techo - N_total);
 
 }
@@ -239,17 +213,16 @@ int defct(int x, int y, int n, Nodo nodo){
 	    int n Numero de votantes
 	    Nodo nodo Matriz de preferencias
  */
-int T(int x, vector <int> cand,int n, Nodo nodo){
+float T(int x, vector <string> cand,int n, Nodo nodo){
   int suma = 0;
   int aux = 0;
-  for (unsigned i = 0; i < cand.size(); i++){
-    if (cand[i] != x){
-      aux = defct(x,cand[i],n,nodo);
+  for (int i = 0; i < cand.size(); i++){
+    if (i != x){
+      aux = defct(x,i,n,nodo);
       suma = suma + aux;
-    }
-    
-  }  
-
+     }
+   }  
+  return suma;
 }
 
 int factorial(int n) {
@@ -266,15 +239,24 @@ int factorial(int n) {
 	    int n Numero de votantes
 	    Nodo nodo Matriz de preferencias
  */
-int T_prima(int x, vector<int> cand, int n, Nodo nodo){
+float T_prima(int x, vector<string> cand, int n, Nodo nodo){
   
   int m = factorial(n);
-  int t = T(x,cand,n,nodo);
-  return (t + log2(m)+ 1) /log2(m) + 3;
-
+  float t = T(x,cand,n,nodo);
+  return (t + log2(m)+ 1)/(log2(m) + 3);
 
 }
 
 
+float heuristica(Nodo nodo, int n , vector<string> cand){
+  
+  float valor = INT_MAX ;
+  float valor_aux;
+  for (unsigned i = 0; i < cand.size(); i++){
+    valor_aux = T_prima(i,cand,n,nodo);
+    if (valor_aux < valor)
+      valor = valor_aux;
+  }
+  return valor;
 
-
+}

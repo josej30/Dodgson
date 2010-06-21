@@ -9,5 +9,6 @@ dodgson.o: dodgson.cpp
 functions.o: functions.cpp functions.h
 	g++ -O3 -c functions.cpp
 
+
 clean: 
 	rm -f dodgson.o dodgson functions.o nodo.o ida_estrella.o
