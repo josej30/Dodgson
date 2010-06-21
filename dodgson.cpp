@@ -17,34 +17,47 @@ int candidatos = 0; // Cantidad de candidatos
 
 using namespace std;
 
+
  
 /*
-Funcion Principal BFS:
+  Funcion Principal BFS:
 
-Entrada: 
-p, perfil original de preferencias
-&m, cola de Nodos para expandir
-limit, limite al que llega BFS al encontrar el primer condorcet
+  Entrada: 
+  p, perfil original de preferencias
+  &m, cola de Nodos para expandir
+  expand, cantidad de nodos expandidos
 */
-void BFS(vector< vector<int> > p, vector<Nodo> &m, int limite, vector<string> cands){
+vector<Nodo> BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> cands, int limite, vector<Nodo> resp){
 
   Nodo nod = m[0];
   m.erase(m.begin());
 
-  cout << "profundidad=" << nod.perfil.size() << endl;
-  cout << "nodos expandidos=" << limite << endl;
-  cout << "nodos generados=" << m.size()+limite << endl;
+  if (resp.size()>0)
+    return resp;
 
+  if (nod.perfil.size()==limite)
+    return resp;
+
+  cout << "profundidad=" << nod.perfil.size() << endl;
+  cout << "nodos expandidos=" << expand << endl;
+  cout << "nodos generados=" << m.size()+expand << endl;
+
+  // Construyo la matriz correspondiente al estado utilizando las columnas que ya  
+  // se han permutado junto a las columnas originales
   vector<vector <int> > modif;
   for (int i=0;i<p.size();i++){
     vector<int> alfa = p[i];
     for (int j=0;j<nod.perfil.size();j++){
-      if (nod.perfil[j][0]==p[i][0])
+      if (nod.perfil[j][0]==p[i][0]){
 	alfa = nod.perfil[j];
+      }
     }
     modif.push_back(alfa);
   }
 
+
+  // Borro el primer entero de cada columna que representa la posicion
+  // de la columna
   for (int i=0;i<modif.size();i++){
     modif[i].erase(modif[i].begin());
     for (int k=0;k<modif[i].size();k++){
@@ -54,67 +67,45 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int limite, vector<string> ca
   }
   
     
+  // Reviso si hay condorcet winner
   vector<int> condor = condorcet(modif,cands);
   if (condor.size()>0){
-    cout << "Dodgson winner: ";
-    for (int cont=0;cont<condor.size();cont++)
-      cout << cands[condor[cont]] << " ";
-    cout << endl;
-    return;
+    Nodo temp;
+    temp.perfil=modif;
+    resp.push_back(temp);
   }
     
+  // Guardo las columnas que ya han sido permutadas
   vector<int> cols_perm;
   for (int j=0;j<nod.perfil.size();j++){
     cols_perm.push_back(nod.perfil[j][0]);
   }
 
-  Nodo push;
-  vector<vector <int> > prefs = nod.perfil;
-
   for (int k=0;k<p.size();k++){
     if (!existe(cols_perm,k)){
       vector<int> temp = p[k];
 
-      int pos = temp[0];
-      temp.erase(temp.begin());
-      for (int ii=0;ii<temp.size()-1;ii++){
+      for (int ii=1;ii<temp.size()-1;ii++){
+
+	Nodo push;
+	vector<vector <int> > prefs = nod.perfil;	
 	vector<int> p2 = permuta(ii,ii+1,temp);
-	vector<int>::iterator it;
-	it = p2.begin();
-	it = p2.insert(it,pos);	
 
 	prefs.push_back(p2);
-      }
-    }
+	push.perfil = prefs;
 
-    push.perfil = prefs;
-    
-    bool insertar = true;
-    for (int cont=0;cont<m.size();cont++){
-      if (repetidos(push,m[cont]))
-	insertar = false;
-    }
-    
-    if (insertar)
-      m.push_back(push);
-    
+	bool insertar = true;
+	for (int t=0;t<m.size();t++){
+	  if (repetidos(push,m[t]))
+	    insertar = false;
+	}	
+	if (insertar)
+	  m.push_back(push);
+      }
+    }    
   }
 
-
-  // Ciclo hiper cochino para mostrar los nodos almacenados en la lista
-
-  /*  for (int i=0;i<m.size();i++){
-    cout << "Nodo" << endl;
-    for (int j=0;j<m[i].perfil.size();j++){
-      for (int k=0;k<m[i].perfil[j].size();k++){
-	cout << m[i].perfil[j][k] << " ";
-      }
-      cout << endl;
-    }
-    }*/
-
-  BFS(p,m,limite+1,cands);
-
+  BFS(p,m,expand+1,cands,limite,resp);
 
 }
 
@@ -122,6 +113,7 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
 
   vector<int> condor = condorcet(p,cands);
   if (condor.size()>0){
+    cout << "init" << endl;
     cout << "Dodgson winner: ";
     for (int cont=0;cont<condor.size();cont++)
       cout << cands[condor[cont]] << " ";
@@ -137,7 +129,7 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
 
       vector<int>::iterator it;
       it = p2.begin();
-      it = p2.insert(it,j);	
+      it = p2.insert(it,i);	
 
       Nodo ins;
       ins.insertar(p2);
@@ -153,8 +145,11 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
     it = p[i].insert(it,i);
   }
 
-  BFS(p,l,0,cands);
+  vector<Nodo> nodox;
+
+  vector<Nodo> nodofinal = BFS(p,l,l.size(),cands,0,nodox);
 }
+
 
 /* Funcion DFS que expande los nodos que prometan una mejor solucion,
    esta funcion es usada en la funcion IDA_estrella
