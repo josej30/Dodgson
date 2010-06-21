@@ -59,6 +59,7 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> ca
   if (condor.size()>0){
 
     if (all) {
+      // Instrucciones para escribir uno de los condorcet winners en el archivo de salida
       for (int cont=0;cont<condor.size();cont++)
 	if (buscaCand(cands[condor[cont]],winners)==-1){
 	  winners.push_back(cands[condor[cont]]);
@@ -82,6 +83,8 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> ca
     }
 
     else {
+      // Cuando el programa fue llamado sin el parametro -all imprime el ganador que encuentra
+      // y si es necesario escribe en el archivo de salida
       cout << "Dodgson winner: ";
       for (int cont=0;cont<condor.size();cont++)
 	cout << cands[condor[cont]] << " ";
@@ -89,6 +92,7 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> ca
       cout << "Num cambios elementales: " << nod.perfil.size() << endl;
       cout << "Nodos generados: " << m.size()+expand << endl;
       cout << "Nodos expandidos: " << expand << endl;
+
       
       string strsalida("vacio");
       if (strsalida.compare(salida)==0){      
@@ -101,6 +105,7 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> ca
 	}
       }
       else {
+	// Si se especifico un archivo de salida, con estas instrucciones se escribe en el
 	ofstream file;
 	char* charBuffer = new char[salida.size()+1];
 	strcpy (charBuffer, salida.c_str());
@@ -124,10 +129,13 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> ca
     cols_perm.push_back(nod.perfil[j][0]);
   }
 
+  // Itero sobre todas las columnas de la matriz original
   for (int k=0;k<p.size();k++){
     if (!existe(cols_perm,k)){
       vector<int> temp = p[k];
 
+      // Para cada columna de la matriz original, la permuto y la junto con la que ya tenia el
+      // nodo que estoy expandiendo para generar uno nuevo
       for (int ii=1;ii<temp.size()-1;ii++){
 
 	Nodo push;
@@ -137,21 +145,27 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> ca
 	prefs.push_back(p2);
 	push.perfil = prefs;
 
+	// Reviso que el nodo que esta recien generado no haya sido
+	// generado previamente
 	bool insertar = true;
 	for (int t=0;t<m.size();t++){
 	  if (repetidos(push,m[t]))
 	    insertar = false;
-	}	
+	}
 	if (insertar)
+	  // Si no esta repetido el nodo inserto el mismo en la cola del BFS
 	  m.push_back(push);
       }
     }    
   }
+
+  // Vuelve a llamar a BFS recursivamente hasta encontrar un condorcet
   BFS(p,m,expand+1,cands,limite,all,winners,salida);
 }
 
 void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands, bool all, string salida){
 
+  // Como es el primer cambio elemental, si encuentro un condorcet lo imprimo
   vector<int> condor = condorcet(p,cands);
   if (condor.size()>0){
     cout << "Num cambios elementales: 0" << endl;
@@ -195,7 +209,7 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands, boo
 
   vector<string> win;
 
-  //  BFS(p,l,l.size(),cands,1,all,win,salida);
+  BFS(p,l,l.size(),cands,1,all,win,salida);
 }
 
 
