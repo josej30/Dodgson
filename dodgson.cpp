@@ -168,8 +168,8 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
  
 vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int costo_limit, int cambios, vector<Nodo> &suc, vector<string> cands){
 
-    cout << "costo_inicial:" << costo_inicial << ", costo_limit:"<< costo_limit << ",cambios" << cambios << endl; 
-    cout << "entra" << endl;
+  //    cout << "costo_inicial:" << costo_inicial << ", costo_limit:"<< costo_limit << ",cambios" << cambios << endl; 
+  //  cout << "entra" << endl;
    
     cambios++;
     int costo_minimo = costo_inicial + heuristica(n,candidatos, cands);
