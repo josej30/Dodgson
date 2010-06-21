@@ -1,10 +1,4 @@
-#include <cmath>
-#include <string>
-#include <vector>
-#include <iostream>
 #include "functions.h"
-#include "limits.h"
-
 
 using namespace std;
 

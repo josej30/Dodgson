@@ -1,5 +1,3 @@
-#include <iostream>
-#include <vector>
 #include "nodo.h"
 
 using namespace std;
