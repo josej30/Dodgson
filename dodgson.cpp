@@ -18,7 +18,6 @@ int candidatos = 0; // Cantidad de candidatos
 using namespace std;
 
 
- 
 /*
   Funcion Principal BFS:
 
@@ -27,20 +26,13 @@ using namespace std;
   &m, cola de Nodos para expandir
   expand, cantidad de nodos expandidos
 */
-vector<Nodo> BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> cands, int limite, vector<Nodo> resp){
+void BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> cands, int limite){
 
   Nodo nod = m[0];
   m.erase(m.begin());
 
-  if (resp.size()>0)
-    return resp;
-
   if (nod.perfil.size()==limite)
-    return resp;
-
-  cout << "profundidad=" << nod.perfil.size() << endl;
-  cout << "nodos expandidos=" << expand << endl;
-  cout << "nodos generados=" << m.size()+expand << endl;
+    return;
 
   // Construyo la matriz correspondiente al estado utilizando las columnas que ya  
   // se han permutado junto a las columnas originales
@@ -55,26 +47,30 @@ vector<Nodo> BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<st
     modif.push_back(alfa);
   }
 
-
   // Borro el primer entero de cada columna que representa la posicion
   // de la columna
   for (int i=0;i<modif.size();i++){
     modif[i].erase(modif[i].begin());
-    for (int k=0;k<modif[i].size();k++){
-      cout << modif[i][k] << " ";
-    }
-    cout << endl;
   }
   
-    
   // Reviso si hay condorcet winner
   vector<int> condor = condorcet(modif,cands);
   if (condor.size()>0){
-    Nodo temp;
-    temp.perfil=modif;
-    resp.push_back(temp);
-  }
+    cout << "Num cambios elementales: " << nod.perfil.size() << endl;
+    cout << "Nodos generados: " << m.size()+expand << endl;
+    cout << "Nodos expandidos: " << expand << endl;
     
+    // Borro el primer entero de cada columna que representa la posicion
+    // de la columna
+    for (int i=0;i<modif.size();i++){
+      for (int k=0;k<modif[i].size();k++){
+	cout << cands[modif[i][k]] << " ";
+      }
+      cout << endl;
+    }
+    limite = nod.perfil.size();
+  }
+  
   // Guardo las columnas que ya han sido permutadas
   vector<int> cols_perm;
   for (int j=0;j<nod.perfil.size();j++){
@@ -104,20 +100,25 @@ vector<Nodo> BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<st
       }
     }    
   }
-
-  BFS(p,m,expand+1,cands,limite,resp);
-
+  BFS(p,m,expand+1,cands,limite);
 }
 
 void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
 
   vector<int> condor = condorcet(p,cands);
   if (condor.size()>0){
-    cout << "init" << endl;
-    cout << "Dodgson winner: ";
-    for (int cont=0;cont<condor.size();cont++)
-      cout << cands[condor[cont]] << " ";
-    cout << endl;
+    cout << "Num cambios elementales: 0" << endl;
+    cout << "Nodos generados: 1" << endl;
+    cout << "Nodos expandidos: 1" << endl;
+    
+    // Borro el primer entero de cada columna que representa la posicion
+    // de la columna
+    for (int i=0;i<p.size();i++){
+      for (int k=0;k<p[i].size();k++){
+	cout << cands[p[i][k]] << " ";
+      }
+      cout << endl;
+    }
     return;
   }
   
@@ -145,9 +146,7 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
     it = p[i].insert(it,i);
   }
 
-  vector<Nodo> nodox;
-
-  vector<Nodo> nodofinal = BFS(p,l,l.size(),cands,0,nodox);
+  BFS(p,l,l.size(),cands,0);
 }
 
 
