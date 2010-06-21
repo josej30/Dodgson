@@ -26,13 +26,10 @@ using namespace std;
   &m, cola de Nodos para expandir
   expand, cantidad de nodos expandidos
 */
-void BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> cands, int limite){
+void BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> cands, int limite, bool all, vector<string> winners){
 
   Nodo nod = m[0];
   m.erase(m.begin());
-
-  if (nod.perfil.size()==limite)
-    return;
 
   // Construyo la matriz correspondiente al estado utilizando las columnas que ya  
   // se han permutado junto a las columnas originales
@@ -52,13 +49,17 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> ca
   for (int i=0;i<modif.size();i++){
     modif[i].erase(modif[i].begin());
   }
-  
-  // Reviso si hay condorcet winner
-  vector<int> condor = condorcet(modif,cands);
-  if (condor.size()>0){
-    cout << "Num cambios elementales: " << nod.perfil.size() << endl;
-    cout << "Nodos generados: " << m.size()+expand << endl;
-    cout << "Nodos expandidos: " << expand << endl;
+
+  // Condicion de salida para el argumento -all
+  if (all==true && limite != 1 && nod.perfil.size()==limite+1){
+    cout << "Dodgson winner: ";
+    for (int winc=0;winc<winners.size();winc++){
+      cout << winners[winc] << " ";
+    }
+    cout << endl;
+    cout << "Num cambios elementales: " << limite << endl;
+    cout << "Nodos generados: " << m.size()+expand-1 << endl;
+    cout << "Nodos expandidos: " << expand-1 << endl;
     
     // Borro el primer entero de cada columna que representa la posicion
     // de la columna
@@ -68,7 +69,41 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> ca
       }
       cout << endl;
     }
-    limite = nod.perfil.size();
+    return;
+  }
+
+  
+  // Reviso si hay condorcet winner
+  vector<int> condor = condorcet(modif,cands);
+  if (condor.size()>0){
+
+    if (all) {
+      for (int cont=0;cont<condor.size();cont++)
+	if (buscaCand(cands[condor[cont]],winners)==-1)
+	  winners.push_back(cands[condor[cont]]);
+      limite = nod.perfil.size();
+    }
+
+    else {
+      cout << "Dodgson winner: ";
+      for (int cont=0;cont<condor.size();cont++)
+	cout << cands[condor[cont]] << " ";
+      cout << endl;
+      cout << "Num cambios elementales: " << nod.perfil.size() << endl;
+      cout << "Nodos generados: " << m.size()+expand << endl;
+      cout << "Nodos expandidos: " << expand << endl;
+      
+      // Borro el primer entero de cada columna que representa la posicion
+      // de la columna
+      for (int i=0;i<modif.size();i++){
+	for (int k=0;k<modif[i].size();k++){
+	  cout << cands[modif[i][k]] << " ";
+	}
+	cout << endl;
+      }
+      limite = nod.perfil.size();
+      //      return;
+    }
   }
   
   // Guardo las columnas que ya han sido permutadas
@@ -100,10 +135,10 @@ void BFS(vector< vector<int> > p, vector<Nodo> &m, int expand, vector<string> ca
       }
     }    
   }
-  BFS(p,m,expand+1,cands,limite);
+  BFS(p,m,expand+1,cands,limite,all,winners);
 }
 
-void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
+void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands, bool all){
 
   vector<int> condor = condorcet(p,cands);
   if (condor.size()>0){
@@ -146,7 +181,9 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
     it = p[i].insert(it,i);
   }
 
-  BFS(p,l,l.size(),cands,0);
+  vector<string> win;
+
+  BFS(p,l,l.size(),cands,1,all,win);
 }
 
 
@@ -162,8 +199,8 @@ void BFSinit(vector< vector<int> > p, vector<Nodo> &l, vector<string> cands){
  
 vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int costo_limit, int cambios, vector<Nodo> &suc, vector<string> cands){
 
-  //    cout << "costo_inicial:" << costo_inicial << ", costo_limit:"<< costo_limit << ",cambios" << cambios << endl; 
-  //  cout << "entra" << endl;
+    cout << "costo_inicial:" << costo_inicial << ", costo_limit:"<< costo_limit << ",cambios" << cambios << endl; 
+    cout << "entra" << endl;
    
     cambios++;
     int costo_minimo = costo_inicial + heuristica(n,candidatos, cands);
@@ -194,8 +231,7 @@ vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int co
 	vector<int> p2 = permuta(j,j+1,p1);
 	vector<int>::iterator it;
 	it = p2.begin();
-	it = p2.insert(it,j);	
-      
+	it = p2.insert(it,j);
 	Nodo ins;
 	ins.insertar(p2);
 	suc.push_back(ins);
@@ -344,10 +380,20 @@ int main (int argc, char *argv[]) {
     
     string str1("-bfs");
     string str2("-ida");
+    string strall("-all");
     Nodo aux;
     vector< int > res1;
-    if (str1.compare(argv[1])==0){    
-      BFSinit(perfil,fifo,c);
+    if (str1.compare(argv[1])==0){
+      bool all = false;
+      for (int ar=0;ar<argc;ar++){
+	if (strall.compare(argv[ar])==0){
+	  all = true;
+	}
+      }
+      if (all)
+	BFSinit(perfil,fifo,c,true);
+      else
+	BFSinit(perfil,fifo,c,false);
     }
     else if (str2.compare(argv[1])== 0){
       //cout << "hola";
