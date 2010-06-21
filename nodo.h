@@ -1,4 +1,6 @@
 #include <vector>
+#include <iostream>
+
 typedef std::vector<int> Pref;
 typedef std::vector<Pref> MatPref;
 

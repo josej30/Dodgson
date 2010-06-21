@@ -1,5 +1,10 @@
+#include <cmath>
+#include <string>
+#include <vector>
+#include <iostream>
 #include <vector>
 #include <string>
+#include "limits.h"
 #include "nodo.h"
 
 using std::string;

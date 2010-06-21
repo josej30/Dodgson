@@ -5,9 +5,6 @@
 #include <vector>
 #include <stdlib.h>
 #include <cmath>
-#include "functions.h"
+#include <cstring>
 #include "limits.h"
-
-vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int costo_limit, int cambios, vector<Nodo> &suc, vector<string> cands));
-
-vector<int>  IDA_estrella();
+#include "functions.h"

@@ -5,31 +5,35 @@
 #include <vector>
 #include <stdlib.h>
 #include <cmath>
-#include "functions.h"
+#include <cstring>
 #include "limits.h"
+#include "bfs.h"
 
+/* Variables Globales*/
 int infinito = INT_MAX;
 int myints[] = {0,0};
 vector<int> resultado (myints, myints + sizeof(myints) / sizeof(int) );
 int cambios= -1;
+int candidatos = 0; // Cantidad de candidatos
 
 using namespace std;
 
 
 vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int costo_limit, int cambios, vector<Nodo> &suc, vector<string> cands){
 
-    cout << "start_cost:" << costo_inicial << ", cost_limit:"<< costo_limit << ",cambios" << cambios << endl; 
+    cout << "costo_inicial:" << costo_inicial << ", costo_limit:"<< costo_limit << ",cambios" << cambios << endl; 
     cout << "entra" << endl;
+   
     cambios++;
-    int costo_minimo = costo_inicial + 1; //heuristica(perfil);
+    int costo_minimo = costo_inicial + heuristica(n,candidatos, cands);
     if (costo_minimo > costo_limit){
       resultado.at(0) = -1; // Valor que indica que se paso el limite
-      resultado.at(1) = costo_minimo;
+      resultado.at(1) = costo_limit;
       return resultado;
     }
     
   /* Verifico si  hay un condorcet */
-    vector<int> condor = condorcet(perfil,cands);
+   vector<int> condor = condorcet(perfil,cands);
     if (condor.size()> 0){
       cout << "Dodgson winner: ";
       for (int cont=0;cont<condor.size();cont++)
@@ -49,8 +53,7 @@ vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int co
 	vector<int> p2 = permuta(j,j+1,p1);
 	vector<int>::iterator it;
 	it = p2.begin();
-	it = p2.insert(it,j);	
-      
+	it = p2.insert(it,j);
 	Nodo ins;
 	ins.insertar(p2);
 	suc.push_back(ins);
@@ -74,7 +77,7 @@ vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int co
       /*Se asume que el costo de ir de un nodo a otro es 1 */
       int nuevoCostoInicial = costo_inicial + 1;
       resultados_aux = DFS(nuevoCostoInicial,perfil, suc[j], costo_limit, cambios,suc,cands);
-      
+       
       if (resultados_aux.at(0) != -1){
 	resultado.at(0) = resultados_aux.at(0);
 	resultado.at(1) = resultados_aux.at(1);
@@ -93,18 +96,23 @@ vector<int> DFS(int costo_inicial, vector <vector <int> > perfil, Nodo n, int co
   }
  
 
-  vector<int>  IDA_estrella (){
-    int costo_limite = 80;//heuristica(Nodo)
-    vector<int> res1 (myints, myints + sizeof(myints) / sizeof(int) );
-    
-    while(true){
-      res1 = DFS(0,perfil, aux,100,-1,fifo,c);
-      if (res1[0] != -1) 
-	return resultado;
-      if (res1[1] == infinito){
-	res1[0] = infinito;
-	return res1;
-      }
+vector<int>  IDA_estrella (vector <vector <int> > perfil, vector<string> cand){
+  
+  vector<int> res1 (myints, myints + sizeof(myints) / sizeof(int) );
+  vector<Nodo> lista;
+  Nodo aux;
+  aux.perfil = perfil;
+  float costo_limite = heuristica(aux,candidatos,cand);
+  cout << costo_limite << endl;
+  while(true){
+    res1 = DFS(0,perfil,aux,costo_limite,-1,lista,cand);
+    if (res1[0] != -1) 
+      return resultado;
+    if (res1[1] == infinito){
+    	res1[0] = infinito;
+    	return res1;
     }
-    
-  }
+  } 
+  return res1;
+  
+}
