@@ -65,7 +65,7 @@ bool condorIndiv(int x,vector< vector<int> > p,vector<string> c){
   }
   for (int k=0; k<c.size(); k++){
     if (k!=x){
-      if (tot[k] < p.size()/2){
+      if (tot[k] <= p.size()/2){
 	return false;
       }
     }
